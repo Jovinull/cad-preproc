@@ -1,0 +1,26 @@
+units:
+  target: "m"        # unidade final
+  arc_segment_len: 0.05   # metros; para discretizar arcos/splines
+  snap_tolerance: 0.01    # nós a <= 1 cm se unem
+  intersect_tolerance: 1e-6
+
+layers:
+  normalize:
+    remove_prefixes: ["A-", "E-", "S-", "ARQ-"]
+    uppercase: true
+    strip_chars: [" ", "\t"]
+  semantic_map:
+    # regex (ordem importa). Primeiro match vence.
+    - {match: "WALL|PAREDE|ALV|ALVENARIA", semantic: "WALL"}
+    - {match: "DOOR|PORTA",                semantic: "DOOR"}
+    - {match: "WIN(DOW)?|JANELA",          semantic: "WINDOW"}
+    - {match: "GRID|EIXO|AXIS",            semantic: "GRID"}
+    - {match: "TEXT|MTEXT|ANNOT|NOTE",     semantic: "TEXT"}
+    - {match: "DIM|COTA",                  semantic: "DIM"}
+    - {match: "HATCH|HACHURA",             semantic: "HATCH"}
+  include_semantics: ["WALL", "DOOR", "WINDOW", "GRID"]   # manter
+  exclude_semantics: ["TEXT", "DIM", "HATCH"]             # descartar
+
+export:
+  formats: ["graphml", "json"]
+  out_basename: "graph"
